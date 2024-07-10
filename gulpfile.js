@@ -1,56 +1,69 @@
-'use strict';
-
 var gulp = require('gulp');
-var imageResize = require('gulp-image-resize');
-var sass = require('gulp-sass')(require('sass'));
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var del = require('del');
 
-gulp.task('delete', function () {
-    return del(['images/*.*']);
+// gulp plugins and utils
+var gutil = require('gulp-util');
+var livereload = require('gulp-livereload');
+var postcss = require('gulp-postcss');
+var sourcemaps = require('gulp-sourcemaps');
+var zip = require('gulp-zip');
+
+// postcss plugins
+var autoprefixer = require('autoprefixer');
+var colorFunction = require('postcss-color-function');
+var cssnano = require('cssnano');
+var customProperties = require('postcss-custom-properties');
+var easyimport = require('postcss-easy-import');
+
+var swallowError = function swallowError(error) {
+    gutil.log(error.toString());
+    gutil.beep();
+    this.emit('end');
+};
+
+var nodemonServerInit = function () {
+    livereload.listen(1234);
+};
+
+gulp.task('build', ['css'], function (/* cb */) {
+    return nodemonServerInit();
 });
 
-gulp.task('resize-images', function () {
-    return gulp.src('images/*.*')
-        .pipe(imageResize({
-            width: 1024,
-            imageMagick: true
-        }))
-        .pipe(gulp.dest('images/fulls'))
-        .pipe(imageResize({
-            width: 512,
-            imageMagick: true
-        }))
-        .pipe(gulp.dest('images/thumbs'));
+gulp.task('css', function () {
+    var processors = [
+        easyimport,
+        customProperties,
+        colorFunction(),
+        autoprefixer({browsers: ['last 2 versions']}),
+        cssnano()
+    ];
+
+    return gulp.src('assets/css/*.css')
+        .on('error', swallowError)
+        .pipe(sourcemaps.init())
+        .pipe(postcss(processors))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('assets/built/'))
+        .pipe(livereload());
 });
 
-// compile scss to css
-gulp.task('sass', function () {
-    return gulp.src('./assets/sass/main.scss')
-        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
-        .pipe(rename({basename: 'main.min'}))
-        .pipe(gulp.dest('./assets/css'));
+gulp.task('watch', function () {
+    gulp.watch('assets/css/**', ['css']);
 });
 
-// watch changes in scss files and run sass task
-gulp.task('sass:watch', function () {
-    gulp.watch('./assets/sass/**/*.scss', ['sass']);
+gulp.task('zip', ['css'], function() {
+    var targetDir = 'dist/';
+    var themeName = require('./package.json').name;
+    var filename = themeName + '.zip';
+
+    return gulp.src([
+        '**',
+        '!node_modules', '!node_modules/**',
+        '!dist', '!dist/**'
+    ])
+        .pipe(zip(filename))
+        .pipe(gulp.dest(targetDir));
 });
 
-// minify js
-gulp.task('minify-js', function () {
-    return gulp.src('./assets/js/main.js')
-        .pipe(uglify())
-        .pipe(rename({basename: 'main.min'}))
-        .pipe(gulp.dest('./assets/js'));
+gulp.task('default', ['build'], function () {
+    gulp.start('watch');
 });
-
-// build task
-gulp.task('build', gulp.series('sass', 'minify-js'));
-
-// resize images
-gulp.task('resize', gulp.series('resize-images', 'delete'));
-
-// default task
-gulp.task('default', gulp.series('build', 'resize'));
