@@ -1,7 +1,7 @@
 ---
-title: Bastille Day'19
+title: Test
 layout: default
-description: viva la france
+description: testing now
 type: project
 order: 4
 ---
