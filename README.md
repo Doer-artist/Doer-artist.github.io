@@ -1,0 +1,4 @@
+Doer-artist
+
+photography 
+write
