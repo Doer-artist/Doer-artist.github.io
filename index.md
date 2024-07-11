@@ -7,7 +7,7 @@ order: 1
 
 <div class="section header">
 	<div class="container">
-		<!--img src="{{ "/assets/img/logo.svg" | relative_url }}"-->
+		<img src="{{ "/assets/img/Doer_main_Logo.jpg" | relative_url }}">
 		<h1 class="section-heading">Doer</h1>
 		<h3 class="section-heading">photography</h3>
 		<p class="section-description">
