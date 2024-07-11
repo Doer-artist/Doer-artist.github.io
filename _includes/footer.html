@@ -1,0 +1,109 @@
+<div class="section footer dark">
+    <div class="container">
+        <img src="{{ "/assets/img/logo_dark.svg" | relative_url }}">
+        <p class="section-description">Get in touch.</p>
+        <div class="social">
+            <a href="https://www.instagram.com/diisshhaashh/"><i class="fab fa-instagram"></i></a>
+            <a href="mailto:dishap71@gmail.com"><i class="fas fa-paper-plane"></i></a>
+        </div>
+        <p>Copyright <i class="fas fa-copyright"></i> 2019 All Rights Reserved.</p>
+        <p class="credit">Made with <i class="fas fa-heart"></i> by <a target="_blank" href="https://samd97.github.io">Saumil Shah</a>.</p>
+    </div>
+</div>
+
+<!-- IntersectionObserver polyfill -->
+<script src="https://raw.githubusercontent.com/w3c/IntersectionObserver/master/polyfill/intersection-observer.js"></script>
+
+<!-- Lozad -->
+<script src="https://cdn.jsdelivr.net/npm/lozad"></script>
+
+<!-- sticky navbar -->
+<script type="text/javascript">
+window.onscroll = function() {myFunction()};
+
+var navbar = document.getElementById("navbar");
+var brand = document.getElementById("brand");
+var height = navbar.offsetHeight; // find height of the navbar
+var sticky = navbar.offsetTop + height; // find y-pos of the navbar
+
+var wrapper = document.getElementById("navbar-wrapper");
+wrapper.style.height = height + "px";
+
+function myFunction() {
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky");
+    brand.classList.remove("hide");
+    brand.classList.add("fade");
+  } else {
+    navbar.classList.remove("sticky");
+    brand.classList.add("hide");
+  }
+}
+</script>
+
+<!-- lazy loading -->
+<script type="text/javascript">
+// Initialize library
+lozad('.lozad', {
+    load: function(el) {
+        el.src = el.dataset.src;
+        el.onload = function() {
+            el.classList.add('fade');
+        }
+    }
+}).observe()
+
+// Initialize library to lazy load images
+var observer = lozad('.lozad', {
+    threshold: 0.1,
+    load: function(el) {
+        el.src = el.getAttribute("data-src");
+        el.onload = function() {
+            el.classList.add('fade');
+        }
+    }
+})
+
+// Picture observer
+// with default `load` method
+var pictureObserver = lozad('.lozad-picture', {
+    threshold: 0.1
+})
+
+observer.observe()
+pictureObserver.observe()
+</script>
+
+
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- lightgallery -->
+<script type="text/javascript" src="{{ "/assets/lightgallery.js" | relative_url }}"></script>
+
+<!-- cross-browser mousewheel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
+
+<!-- lightgallery call -->
+<script type="text/javascript">
+    $('#gallery').lightGallery({
+        selector: '.lozad',
+        speed: 200,
+        mode: 'lg-fade',
+        download: false
+    });
+</script>
+
+<script type="text/javascript">
+    function menuExpand() {
+  var x = document.getElementById("navbar");
+  if (x.className === "close sticky") {
+    x.className = "open sticky";
+  } else {
+    x.className = "close sticky";
+  }
+}
+</script>
+
+<!-- font-awesome -->
+<script type="text/javascript" src="https://kit.fontawesome.com/1780dd6d31.js"></script>

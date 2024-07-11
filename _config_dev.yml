@@ -1,5 +1,5 @@
 title: El_photography
-url: https://samd97.github.io/el_photo/
+url:  http://127.0.0.1:4000
 baseurl: 
 
 author: Disha Patel
@@ -31,12 +31,12 @@ collections:
   cn_fishnet:
     output: true
   market:
-    output: 
+    output: true 
   bastilleday:
     output: true
   kathakali:
-    output: true 
-
+    output: true  
+    
 markdown: kramdown
 kramdown:
   input: GFM
